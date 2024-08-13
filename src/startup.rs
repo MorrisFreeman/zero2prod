@@ -1,6 +1,6 @@
 use crate::routes::{
-    health_check::health_check,
-    subscriptions::subscribe,
+    health_check,
+    subscribe,
 };
 use actix_web::{
     web,
