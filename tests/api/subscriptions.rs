@@ -1,11 +1,7 @@
 use crate::helpers::spawn_app;
 use wiremock::{
-    matchers::{
-        method,
-        path,
-    },
-    Mock,
-    ResponseTemplate,
+    matchers::{method, path},
+    Mock, ResponseTemplate,
 };
 
 #[tokio::test]
