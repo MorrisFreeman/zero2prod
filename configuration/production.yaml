@@ -4,5 +4,4 @@ database:
   require_ssl: true
 email_client:
   base_url: 'https://api.postmarkapp.com'
-  sender_email: 'something@gmail.com'
-  authorization_token: '8fabbd3a-208d-4f82-ba2b-5e6f520b2d85'
+  sender_email: 'hirata@sikmi.com'
