@@ -1,17 +1,19 @@
+use crate::configuration::{DatabaseSettings, Settings};
 use crate::{
     email_client::EmailClient,
     routes::{health_check, subscribe},
 };
 use actix_web::{dev::Server, web, App, HttpServer};
+use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use std::net::TcpListener;
-use sqlx::postgres::PgPoolOptions;
 use tracing_actix_web::TracingLogger;
-use crate::configuration::{DatabaseSettings, Settings};
 
 pub fn build(configuration: Settings) -> Result<Server, std::io::Error> {
     let connection_pool = get_connection_pool(&configuration.database);
-    let sender_email = configuration.email_client.sender()
+    let sender_email = configuration
+        .email_client
+        .sender()
         .expect("Invalid sender email address.");
     let timeout = configuration.email_client.timeout();
     let email_client = EmailClient::new(
@@ -28,9 +30,7 @@ pub fn build(configuration: Settings) -> Result<Server, std::io::Error> {
     run(listener, connection_pool, email_client)
 }
 
-pub fn get_connection_pool(
-    configuration: &DatabaseSettings
-) -> PgPool {
+pub fn get_connection_pool(configuration: &DatabaseSettings) -> PgPool {
     PgPoolOptions::new().connect_lazy_with(configuration.with_db())
 }
 

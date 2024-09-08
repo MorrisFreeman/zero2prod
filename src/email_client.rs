@@ -1,7 +1,7 @@
 use crate::domain::SubscriberEmail;
 use reqwest::Client;
 use secrecy::{ExposeSecret, Secret};
-use serde::{Serialize};
+use serde::Serialize;
 
 pub struct EmailClient {
     http_client: Client,
@@ -17,10 +17,7 @@ impl EmailClient {
         authorization_token: Secret<String>,
         timeout: std::time::Duration,
     ) -> Self {
-        let http_client = Client::builder()
-            .timeout(timeout)
-            .build()
-            .unwrap();
+        let http_client = Client::builder().timeout(timeout).build().unwrap();
         Self {
             http_client,
             base_url,
@@ -44,7 +41,8 @@ impl EmailClient {
             html_body: html_content,
             text_body: text_content,
         };
-        let _builder = self.http_client
+        let _builder = self
+            .http_client
             .post(&url)
             .header(
                 "X-Postmark-Server-Token",
@@ -72,14 +70,14 @@ struct SendEmailRequest<'a> {
 mod tests {
     use crate::domain::SubscriberEmail;
     use crate::email_client::EmailClient;
+    use claims::{assert_err, assert_ok};
     use fake::faker::internet::en::SafeEmail;
     use fake::faker::lorem::en::{Paragraph, Sentence};
     use fake::{Fake, Faker};
     use secrecy::Secret;
-    use wiremock::matchers::{any, header_exists, header, path, method};
-    use wiremock::{Mock, MockServer, ResponseTemplate};
+    use wiremock::matchers::{any, header, header_exists, method, path};
     use wiremock::Request;
-    use claims::{assert_err, assert_ok};
+    use wiremock::{Mock, MockServer, ResponseTemplate};
 
     struct SendEmailBodyMatcher;
 
@@ -185,8 +183,7 @@ mod tests {
     async fn send_email_times_out_if_the_server_takes_too_long() {
         let mock_server = MockServer::start().await;
         let email_client = email_client(mock_server.uri());
-        let response = ResponseTemplate::new(200)
-            .set_delay(std::time::Duration::from_secs(180));
+        let response = ResponseTemplate::new(200).set_delay(std::time::Duration::from_secs(180));
 
         Mock::given(any())
             .respond_with(response)
